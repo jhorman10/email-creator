@@ -297,7 +297,7 @@ const EmailPreview: React.FC<EmailPreviewProps> = memo(({
       {/* Navegación adicional en la parte inferior */}
       {emails.length > 1 && (
         <div className="flex justify-center pt-4 pb-6 border-t border-gray-200">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4">
             <button
               onClick={pagination.goToPrevious}
               disabled={!pagination.hasPrevious}
@@ -310,6 +310,15 @@ const EmailPreview: React.FC<EmailPreviewProps> = memo(({
             <span className="px-4 py-2 text-sm bg-gray-100 rounded-md font-medium">
               {pagination.currentIndex + 1} / {emails.length}
             </span>
+            
+            <button
+              onClick={handleCopyCurrentEmail}
+              className="flex items-center gap-2 px-3 py-2 text-sm bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-md transition-colors"
+              title="Copiar este correo"
+            >
+              <Copy className="h-4 w-4" />
+              Copiar
+            </button>
             
             <button
               onClick={pagination.goToNext}
