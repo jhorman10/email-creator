@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, memo, useCallback, useMemo } from 'react';
 import { Mail, Eye, Copy, Download, ChevronLeft, ChevronRight } from 'lucide-react';
+import { VirtualizedEmailList } from './VirtualizedEmailList';
 import type { GeneratedEmail } from '../types';
 
 interface EmailPreviewProps {
@@ -13,7 +14,7 @@ interface EmailPreviewProps {
   onExportCSV: () => string;
 }
 
-export const EmailPreview: React.FC<EmailPreviewProps> = ({
+const EmailPreview: React.FC<EmailPreviewProps> = memo(({
   emails,
   statistics,
   onExportText,
@@ -21,19 +22,24 @@ export const EmailPreview: React.FC<EmailPreviewProps> = ({
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showRawData, setShowRawData] = useState(false);
+  const [viewMode, setViewMode] = useState<'individual' | 'list'>('individual');
 
-  const currentEmail = emails[currentIndex];
+  // Usar vista de lista por defecto si hay muchos emails
+  const shouldUseListView = emails.length > 50;
+  const effectiveViewMode = shouldUseListView && viewMode === 'individual' ? 'list' : viewMode;
 
-  const copyToClipboard = async (text: string) => {
+  const currentEmail = useMemo(() => emails[currentIndex], [emails, currentIndex]);
+
+  const copyToClipboard = useCallback(async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
       // Aquí podrías mostrar una notificación de éxito
     } catch (err) {
       console.error('Error al copiar al portapapeles:', err);
     }
-  };
+  }, []);
 
-  const downloadFile = (content: string, filename: string, mimeType: string) => {
+  const downloadFile = useCallback((content: string, filename: string, mimeType: string) => {
     const blob = new Blob([content], { type: mimeType });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -43,17 +49,26 @@ export const EmailPreview: React.FC<EmailPreviewProps> = ({
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-  };
+  }, []);
+
+  const goToNext = useCallback(() => {
+    setCurrentIndex(prev => Math.min(prev + 1, emails.length - 1));
+  }, [emails.length]);
+
+  const goToPrevious = useCallback(() => {
+    setCurrentIndex(prev => Math.max(prev - 1, 0));
+  }, []);
+
+  const toggleRawData = useCallback(() => {
+    setShowRawData(prev => !prev);
+  }, []);
 
   if (emails.length === 0) {
     return (
-      <div className="bg-gray-50 border border-gray-200 rounded-lg p-8 text-center">
+      <div className="bg-white rounded-lg shadow-md border border-gray-200 p-8 text-center">
         <Mail className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-        <h3 className="text-lg font-medium text-gray-900 mb-2">
-          No hay correos generados
-        </h3>
-        <p className="text-gray-600">
-          Carga un archivo Excel, escribe una plantilla y mapea los campos para generar correos personalizados.
+        <p className="text-gray-500">
+          No hay correos generados. Completa los pasos anteriores para ver los correos aquí.
         </p>
       </div>
     );
@@ -111,107 +126,139 @@ export const EmailPreview: React.FC<EmailPreviewProps> = ({
         </div>
       </div>
 
-      {/* Navegación entre correos */}
-      <div className="p-4 border-b border-gray-200 flex items-center justify-between">
-        <button
-          onClick={() => setCurrentIndex(Math.max(0, currentIndex - 1))}
-          disabled={currentIndex === 0}
-          className="flex items-center gap-2 px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed rounded-md transition-colors"
-        >
-          <ChevronLeft className="h-4 w-4" />
-          Anterior
-        </button>
-
-        <div className="flex items-center gap-4">
-          <span className="text-sm text-gray-600">
-            Correo {currentIndex + 1} de {emails.length}
-          </span>
+      {/* Navegación entre correos - solo en vista individual */}
+      {effectiveViewMode === 'individual' && (
+        <div className="p-4 border-b border-gray-200 flex items-center justify-between">
           <button
-            onClick={() => setShowRawData(!showRawData)}
-            className="flex items-center gap-2 px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+            onClick={goToPrevious}
+            disabled={currentIndex === 0}
+            className="flex items-center gap-2 px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed rounded-md transition-colors"
           >
-            <Eye className="h-4 w-4" />
-            {showRawData ? 'Vista Normal' : 'Ver Datos'}
+            <ChevronLeft className="h-4 w-4" />
+            Anterior
+          </button>
+
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-gray-600">
+              {effectiveViewMode === 'individual' 
+                ? `Correo ${currentIndex + 1} de ${emails.length}`
+                : `${emails.length} correos`
+              }
+            </span>
+            
+            {!shouldUseListView && (
+              <button
+                onClick={() => setViewMode(viewMode === 'individual' ? 'list' : 'individual')}
+                className="flex items-center gap-2 px-3 py-2 text-sm bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-md transition-colors"
+              >
+                {effectiveViewMode === 'individual' ? 'Vista Lista' : 'Vista Individual'}
+              </button>
+            )}
+            
+            {effectiveViewMode === 'individual' && (
+              <button
+                onClick={toggleRawData}
+                className="flex items-center gap-2 px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+              >
+                <Eye className="h-4 w-4" />
+                {showRawData ? 'Vista Normal' : 'Ver Datos'}
+              </button>
+            )}
+          </div>
+
+          <button
+            onClick={goToNext}
+            disabled={currentIndex === emails.length - 1}
+            className="flex items-center gap-2 px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed rounded-md transition-colors"
+          >
+            Siguiente
+            <ChevronRight className="h-4 w-4" />
           </button>
         </div>
+      )}
 
-        <button
-          onClick={() => setCurrentIndex(Math.min(emails.length - 1, currentIndex + 1))}
-          disabled={currentIndex === emails.length - 1}
-          className="flex items-center gap-2 px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed rounded-md transition-colors"
-        >
-          Siguiente
-          <ChevronRight className="h-4 w-4" />
-        </button>
-      </div>
-
-      {/* Contenido del correo */}
+      {/* Contenido - Vista individual o lista */}
       <div className="p-6">
-        {showRawData ? (
-          <div className="space-y-4">
-            <h3 className="font-medium text-gray-900">Datos de la fila #{currentEmail.id}</h3>
-            <div className="grid grid-cols-2 gap-4">
-              {Object.entries(currentEmail.rowData).map(([key, value]) => (
-                <div key={key} className="border border-gray-200 rounded p-3">
-                  <div className="text-sm font-medium text-gray-600">{key}</div>
-                  <div className="text-gray-900">{value || '-'}</div>
-                </div>
-              ))}
-            </div>
-          </div>
+        {effectiveViewMode === 'list' ? (
+          <VirtualizedEmailList emails={emails} height={600} />
         ) : (
-          <div className="space-y-6">
-            {/* Información del destinatario */}
-            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-              <Mail className="h-5 w-5 text-gray-500" />
-              <div>
-                <div className="text-sm font-medium text-gray-700">Para:</div>
-                <div className="text-gray-900">
-                  {currentEmail.recipient || (
-                    <span className="text-orange-600 italic">Sin destinatario definido</span>
-                  )}
+          showRawData ? (
+            <div className="space-y-4">
+              <h3 className="font-medium text-gray-900">Datos de la fila #{currentEmail.id}</h3>
+              <div className="grid grid-cols-2 gap-4">
+                {Object.entries(currentEmail.rowData).map(([key, value]) => (
+                  <div key={key} className="border border-gray-200 rounded p-3">
+                    <div className="text-sm font-medium text-gray-600">{key}</div>
+                    <div className="text-gray-900">{value || '-'}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-6">
+              {/* Información del destinatario */}
+              <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                <Mail className="h-5 w-5 text-gray-500" />
+                <div>
+                  <div className="text-sm font-medium text-gray-700">Para:</div>
+                  <div className="text-gray-900">
+                    {currentEmail.recipient || (
+                      <span className="text-orange-600 italic">Sin destinatario definido</span>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Asunto */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Asunto:
-              </label>
-              <div className="p-3 bg-gray-50 rounded-lg">
-                <div className="text-gray-900">{currentEmail.subject}</div>
+              {/* Asunto del correo */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-sm font-medium text-gray-700">Asunto:</h3>
+                  <button
+                    onClick={() => copyToClipboard(currentEmail.subject || '')}
+                    className="text-xs text-blue-600 hover:text-blue-800 flex items-center gap-1"
+                  >
+                    <Copy className="h-3 w-3" />
+                    Copiar
+                  </button>
+                </div>
+                <div className="p-3 bg-gray-50 rounded border">
+                  <p className="text-gray-900">{currentEmail.subject || 'Sin asunto'}</p>
+                </div>
               </div>
-              <button
-                onClick={() => copyToClipboard(currentEmail.subject)}
-                className="mt-2 text-xs text-blue-600 hover:text-blue-800 flex items-center gap-1"
-              >
-                <Copy className="h-3 w-3" />
-                Copiar asunto
-              </button>
-            </div>
 
-            {/* Cuerpo del correo */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Mensaje:
-              </label>
-              <div className="p-4 bg-gray-50 rounded-lg min-h-[200px]">
-                <pre className="whitespace-pre-wrap text-gray-900 text-sm leading-relaxed">
-                  {currentEmail.body}
-                </pre>
+              {/* Cuerpo del correo */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-sm font-medium text-gray-700">Mensaje:</h3>
+                  <button
+                    onClick={() => copyToClipboard(`Para: ${currentEmail.recipient}\nAsunto: ${currentEmail.subject}\n\n${currentEmail.body}`)}
+                    className="text-xs text-blue-600 hover:text-blue-800 flex items-center gap-1"
+                  >
+                    <Copy className="h-3 w-3" />
+                    Copiar todo
+                  </button>
+                </div>
+                <div className="p-4 bg-gray-50 rounded border">
+                  <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed text-gray-900">
+                    {currentEmail.body}
+                  </pre>
+                </div>
+                <button
+                  onClick={() => copyToClipboard(currentEmail.body)}
+                  className="mt-2 text-xs text-blue-600 hover:text-blue-800 flex items-center gap-1"
+                >
+                  <Copy className="h-3 w-3" />
+                  Copiar mensaje
+                </button>
               </div>
-              <button
-                onClick={() => copyToClipboard(currentEmail.body)}
-                className="mt-2 text-xs text-blue-600 hover:text-blue-800 flex items-center gap-1"
-              >
-                <Copy className="h-3 w-3" />
-                Copiar mensaje
-              </button>
             </div>
-          </div>
+          )
         )}
       </div>
     </div>
   );
-};
+});
+
+EmailPreview.displayName = 'EmailPreview';
+
+export { EmailPreview };

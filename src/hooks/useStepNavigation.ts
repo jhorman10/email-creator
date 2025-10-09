@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useCallback } from 'react';
 import type { ExcelData, FieldMapping } from '../types';
 
 interface StepValidationRules {
@@ -41,28 +41,28 @@ export const useStepNavigation = (
     };
   }, [excelData, emailBody, fieldMapping]);
 
-  const goToNextStep = (step: number): number | null => {
+  const goToNextStep = useCallback((step: number): number | null => {
     const nextStep = step + 1;
     if (nextStep <= 4 && canProceedToStep(nextStep)) {
       return nextStep;
     }
     return null;
-  };
+  }, [canProceedToStep]);
 
-  const goToPreviousStep = (step: number): number | null => {
+  const goToPreviousStep = useCallback((step: number): number | null => {
     const previousStep = step - 1;
     if (previousStep >= 1) {
       return previousStep;
     }
     return null;
-  };
+  }, []);
 
-  const getStepStatus = (step: number, activeStep: number): 'active' | 'completed' | 'available' | 'disabled' => {
+  const getStepStatus = useCallback((step: number, activeStep: number): 'active' | 'completed' | 'available' | 'disabled' => {
     if (step === activeStep) return 'active';
     if (step < activeStep) return 'completed';
     if (canProceedToStep(step)) return 'available';
     return 'disabled';
-  };
+  }, [canProceedToStep]);
 
   return {
     canProceedToStep,

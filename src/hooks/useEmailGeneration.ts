@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useCallback } from 'react';
 import type { ExcelData, FieldMapping, GeneratedEmail } from '../types';
 
 export const useEmailGeneration = (
@@ -6,6 +6,26 @@ export const useEmailGeneration = (
   template: { subject: string; body: string },
   mapping: FieldMapping
 ) => {
+  // Memoizar la lógica de reemplazo de placeholders para evitar recálculos innecesarios
+  const replacePlaceholders = useCallback((text: string, rowData: { [key: string]: string }) => {
+    let result = text;
+    Object.entries(mapping).forEach(([placeholder, columnName]) => {
+      const value = rowData[columnName] || '';
+      const patterns = [
+        new RegExp(`\\{\\{${placeholder}\\}\\}`, 'gi'),
+        new RegExp(`\\{${placeholder}\\}`, 'gi'),
+        new RegExp(`\\[${placeholder}\\]`, 'gi'),
+        new RegExp(`<${placeholder}>`, 'gi'),
+        new RegExp(`\\b${placeholder}\\b`, 'gi')
+      ];
+      
+      patterns.forEach(pattern => {
+        result = result.replace(pattern, value);
+      });
+    });
+    return result;
+  }, [mapping]);
+
   const generatedEmails = useMemo((): GeneratedEmail[] => {
     if (!excelData || !template.body.trim()) {
       return [];
@@ -18,39 +38,9 @@ export const useEmailGeneration = (
         rowData[header] = row[headerIndex] || '';
       });
 
-      // Reemplazar placeholders en el asunto
-      let personalizedSubject = template.subject;
-      Object.entries(mapping).forEach(([placeholder, columnName]) => {
-        const value = rowData[columnName] || '';
-        const patterns = [
-          new RegExp(`\\{\\{${placeholder}\\}\\}`, 'gi'),
-          new RegExp(`\\{${placeholder}\\}`, 'gi'),
-          new RegExp(`\\[${placeholder}\\]`, 'gi'),
-          new RegExp(`<${placeholder}>`, 'gi'),
-          new RegExp(`\\b${placeholder}\\b`, 'gi')
-        ];
-        
-        patterns.forEach(pattern => {
-          personalizedSubject = personalizedSubject.replace(pattern, value);
-        });
-      });
-
-      // Reemplazar placeholders en el cuerpo
-      let personalizedBody = template.body;
-      Object.entries(mapping).forEach(([placeholder, columnName]) => {
-        const value = rowData[columnName] || '';
-        const patterns = [
-          new RegExp(`\\{\\{${placeholder}\\}\\}`, 'gi'),
-          new RegExp(`\\{${placeholder}\\}`, 'gi'),
-          new RegExp(`\\[${placeholder}\\]`, 'gi'),
-          new RegExp(`<${placeholder}>`, 'gi'),
-          new RegExp(`\\b${placeholder}\\b`, 'gi')
-        ];
-        
-        patterns.forEach(pattern => {
-          personalizedBody = personalizedBody.replace(pattern, value);
-        });
-      });
+      // Reemplazar placeholders usando la función memoizada
+      const personalizedSubject = replacePlaceholders(template.subject, rowData);
+      const personalizedBody = replacePlaceholders(template.body, rowData);
 
       // Obtener el correo del destinatario
       const emailColumn = excelData.headers.find(header => 
@@ -69,7 +59,7 @@ export const useEmailGeneration = (
         rowData
       };
     });
-  }, [excelData, template, mapping]);
+  }, [excelData, template, replacePlaceholders]);
 
   const statistics = useMemo(() => {
     const total = generatedEmails.length;

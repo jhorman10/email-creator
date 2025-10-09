@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Upload, File, X } from 'lucide-react';
 import type { ExcelData } from '../types';
@@ -8,14 +8,16 @@ interface FileUploadProps {
   loading: boolean;
   excelData: ExcelData | null;
   error: string | null;
+  progress: number;
   onClearData: () => void;
 }
 
-export const FileUpload: React.FC<FileUploadProps> = ({
+const FileUpload: React.FC<FileUploadProps> = memo(({
   onFileUpload,
   loading,
   excelData,
   error,
+  progress,
   onClearData
 }) => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -124,6 +126,21 @@ export const FileUpload: React.FC<FileUploadProps> = ({
                 : 'o haz clic para seleccionar un archivo'
               }
             </p>
+            
+            {loading && progress > 0 && (
+              <div className="mt-3">
+                <div className="flex justify-between text-xs text-gray-600 mb-1">
+                  <span>Progreso</span>
+                  <span>{progress}%</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div 
+                    className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
+                    style={{ width: `${progress}%` }}
+                  ></div>
+                </div>
+              </div>
+            )}
           </div>
           
           <div className="flex gap-2 text-xs text-gray-400">
@@ -143,4 +160,8 @@ export const FileUpload: React.FC<FileUploadProps> = ({
       )}
     </div>
   );
-};
+});
+
+FileUpload.displayName = 'FileUpload';
+
+export { FileUpload };

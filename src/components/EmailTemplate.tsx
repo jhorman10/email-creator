@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo, useCallback } from 'react';
 import { Mail, Info, Plus } from 'lucide-react';
 import { useFieldDetection } from '../hooks/useFieldDetection';
 
@@ -10,7 +10,7 @@ interface EmailTemplateProps {
   availableColumns: string[];
 }
 
-export const EmailTemplate: React.FC<EmailTemplateProps> = ({
+const EmailTemplate: React.FC<EmailTemplateProps> = memo(({
   subject,
   body,
   onSubjectChange,
@@ -19,12 +19,13 @@ export const EmailTemplate: React.FC<EmailTemplateProps> = ({
 }) => {
   const { detectedFields, suggestions } = useFieldDetection(body);
 
-  const insertField = (field: string) => {
-    const cursorPos = (document.getElementById('email-body') as HTMLTextAreaElement)?.selectionStart || body.length;
+  const insertField = useCallback((field: string) => {
+    const textarea = document.getElementById('email-body') as HTMLTextAreaElement;
+    const cursorPos = textarea?.selectionStart || body.length;
     const beforeCursor = body.substring(0, cursorPos);
     const afterCursor = body.substring(cursorPos);
     onBodyChange(beforeCursor + `{{${field}}}` + afterCursor);
-  };
+  }, [body, onBodyChange]);
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
@@ -134,4 +135,8 @@ export const EmailTemplate: React.FC<EmailTemplateProps> = ({
       )}
     </div>
   );
-};
+});
+
+EmailTemplate.displayName = 'EmailTemplate';
+
+export { EmailTemplate };

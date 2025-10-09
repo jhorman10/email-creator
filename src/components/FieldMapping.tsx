@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import { ArrowRight, CheckCircle, AlertCircle } from 'lucide-react';
 import type { FieldMapping } from '../types';
 
@@ -10,14 +10,14 @@ interface FieldMappingProps {
   excelData?: string[][];
 }
 
-export const FieldMappingComponent: React.FC<FieldMappingProps> = ({
+const FieldMappingComponent: React.FC<FieldMappingProps> = memo(({
   detectedFields,
   availableColumns,
   mapping,
   onMappingChange,
   excelData
 }) => {
-  const handleFieldMapping = (field: string, column: string) => {
+  const handleFieldMapping = useCallback((field: string, column: string) => {
     const newMapping = { ...mapping };
     if (column === '') {
       delete newMapping[field];
@@ -25,9 +25,9 @@ export const FieldMappingComponent: React.FC<FieldMappingProps> = ({
       newMapping[field] = column;
     }
     onMappingChange(newMapping);
-  };
+  }, [mapping, onMappingChange]);
 
-  const autoMapFields = () => {
+  const autoMapFields = useCallback(() => {
     const newMapping: FieldMapping = {};
     
     detectedFields.forEach(field => {
@@ -53,19 +53,22 @@ export const FieldMappingComponent: React.FC<FieldMappingProps> = ({
     });
     
     onMappingChange(newMapping);
-  };
+  }, [detectedFields, availableColumns, onMappingChange]);
 
-  const getMappedFields = () => detectedFields.filter(field => mapping[field]);
-  const getUnmappedFields = () => detectedFields.filter(field => !mapping[field]);
+  const { mappedFields, unmappedFields } = useMemo(() => {
+    const mapped = detectedFields.filter(field => mapping[field]);
+    const unmapped = detectedFields.filter(field => !mapping[field]);
+    return { mappedFields: mapped, unmappedFields: unmapped };
+  }, [detectedFields, mapping]);
 
-  const getPreviewData = (columnName: string) => {
+  const getPreviewData = useCallback((columnName: string) => {
     if (!excelData || !columnName) return null;
     
     const columnIndex = availableColumns.indexOf(columnName);
     if (columnIndex === -1) return null;
     
     return excelData.slice(0, 3).map(row => row[columnIndex] || '').filter(val => val);
-  };
+  }, [excelData, availableColumns]);
 
   if (detectedFields.length === 0) {
     return (
@@ -157,12 +160,12 @@ export const FieldMappingComponent: React.FC<FieldMappingProps> = ({
           <div className="flex items-center gap-2 mb-2">
             <CheckCircle className="h-4 w-4 text-green-600" />
             <span className="text-sm font-medium text-green-900">
-              Campos mapeados: {getMappedFields().length}
+              Campos mapeados: {mappedFields.length}
             </span>
           </div>
-          {getMappedFields().length > 0 && (
+          {mappedFields.length > 0 && (
             <div className="text-xs text-green-700">
-              {getMappedFields().join(', ')}
+              {mappedFields.join(', ')}
             </div>
           )}
         </div>
@@ -171,16 +174,20 @@ export const FieldMappingComponent: React.FC<FieldMappingProps> = ({
           <div className="flex items-center gap-2 mb-2">
             <AlertCircle className="h-4 w-4 text-orange-600" />
             <span className="text-sm font-medium text-orange-900">
-              Campos sin mapear: {getUnmappedFields().length}
+              Campos sin mapear: {unmappedFields.length}
             </span>
           </div>
-          {getUnmappedFields().length > 0 && (
+          {unmappedFields.length > 0 && (
             <div className="text-xs text-orange-700">
-              {getUnmappedFields().join(', ')}
+              {unmappedFields.join(', ')}
             </div>
           )}
         </div>
       </div>
     </div>
   );
-};
+});
+
+FieldMappingComponent.displayName = 'FieldMappingComponent';
+
+export { FieldMappingComponent };

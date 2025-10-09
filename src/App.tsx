@@ -1,8 +1,14 @@
+import React, { Suspense } from 'react';
 import { Mail, RotateCcw, FileText, Send } from 'lucide-react';
-import { FileUpload } from './components/FileUpload';
-import { EmailTemplate } from './components/EmailTemplate';
-import { FieldMappingComponent } from './components/FieldMapping';
-import { EmailPreview } from './components/EmailPreview';
+import { LoadingSpinner } from './components/LoadingSpinner';
+
+// Lazy loading para componentes pesados
+const FileUpload = React.lazy(() => import('./components/FileUpload').then(module => ({ default: module.FileUpload })));
+const EmailTemplate = React.lazy(() => import('./components/EmailTemplate').then(module => ({ default: module.EmailTemplate })));
+const FieldMappingComponent = React.lazy(() => import('./components/FieldMapping').then(module => ({ default: module.FieldMappingComponent })));
+const EmailPreview = React.lazy(() => import('./components/EmailPreview').then(module => ({ default: module.EmailPreview })));
+
+// Hooks
 import { useExcelReader } from './hooks/useExcelReader';
 import { useFieldDetection } from './hooks/useFieldDetection';
 import { useEmailGeneration } from './hooks/useEmailGeneration';
@@ -14,7 +20,7 @@ import { useStepsConfig } from './hooks/useStepsConfig';
 function App() {
   // Hooks para manejar el estado y lógica de negocio
   const appState = useAppState();
-  const { excelData, loading, error, readExcelFile, clearData } = useExcelReader();
+  const { excelData, loading, error, progress, readExcelFile, clearData } = useExcelReader();
   const { detectedFields } = useFieldDetection(appState.emailBody);
   const { generatedEmails, statistics, getEmailsAsText, getEmailsAsCSV } = useEmailGeneration(
     excelData,
@@ -110,13 +116,16 @@ function App() {
           {appState.activeStep === 1 && (
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Paso 1: Cargar archivo Excel</h2>
-              <FileUpload
-                onFileUpload={readExcelFile}
-                loading={loading}
-                excelData={excelData}
-                error={error}
-                onClearData={clearData}
-              />
+              <Suspense fallback={<LoadingSpinner message="Cargando componente de carga..." />}>
+                <FileUpload
+                  onFileUpload={readExcelFile}
+                  loading={loading}
+                  excelData={excelData}
+                  error={error}
+                  progress={progress}
+                  onClearData={clearData}
+                />
+              </Suspense>
               {excelData && (
                 <div className="mt-6 flex justify-end">
                   <button
@@ -134,13 +143,15 @@ function App() {
           {appState.activeStep === 2 && (
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Paso 2: Crear plantilla de correo</h2>
-              <EmailTemplate
-                subject={appState.emailSubject}
-                body={appState.emailBody}
-                onSubjectChange={appState.setEmailSubject}
-                onBodyChange={appState.setEmailBody}
-                availableColumns={excelData?.headers || []}
-              />
+              <Suspense fallback={<LoadingSpinner message="Cargando editor de plantillas..." />}>
+                <EmailTemplate
+                  subject={appState.emailSubject}
+                  body={appState.emailBody}
+                  onSubjectChange={appState.setEmailSubject}
+                  onBodyChange={appState.setEmailBody}
+                  availableColumns={excelData?.headers || []}
+                />
+              </Suspense>
               {appState.emailBody.trim() && (
                 <div className="mt-6 flex justify-between">
                   <button
@@ -164,13 +175,15 @@ function App() {
           {appState.activeStep === 3 && (
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Paso 3: Mapear campos</h2>
-              <FieldMappingComponent
-                detectedFields={detectedFields}
-                availableColumns={excelData?.headers || []}
-                mapping={appState.fieldMapping}
-                onMappingChange={appState.setFieldMapping}
-                excelData={excelData?.rows}
-              />
+              <Suspense fallback={<LoadingSpinner message="Cargando mapeo de campos..." />}>
+                <FieldMappingComponent
+                  detectedFields={detectedFields}
+                  availableColumns={excelData?.headers || []}
+                  mapping={appState.fieldMapping}
+                  onMappingChange={appState.setFieldMapping}
+                  excelData={excelData?.rows}
+                />
+              </Suspense>
               <div className="mt-6 flex justify-between">
                 <button
                   onClick={() => appState.setActiveStep(2)}
@@ -194,12 +207,14 @@ function App() {
           {appState.activeStep === 4 && (
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Paso 4: Correos generados</h2>
-              <EmailPreview
-                emails={generatedEmails}
-                statistics={statistics}
-                onExportText={getEmailsAsText}
-                onExportCSV={getEmailsAsCSV}
-              />
+              <Suspense fallback={<LoadingSpinner message="Cargando vista previa de correos..." />}>
+                <EmailPreview
+                  emails={generatedEmails}
+                  statistics={statistics}
+                  onExportText={getEmailsAsText}
+                  onExportCSV={getEmailsAsCSV}
+                />
+              </Suspense>
               <div className="mt-6 flex justify-start">
                 <button
                   onClick={() => appState.setActiveStep(3)}
