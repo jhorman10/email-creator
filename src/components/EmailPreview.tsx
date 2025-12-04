@@ -22,8 +22,8 @@ interface EmailPreviewProps {
  * Implementa el principio de Single Responsibility - solo renderiza estadísticas
  */
 const EmailStatistics: React.FC<{ statistics: { total: number; withRecipient: number; withoutRecipient: number } }> = memo(({ statistics }) => (
-  <div className="grid grid-cols-3 gap-4">
-    <div className="text-center p-3 bg-rose-50 rounded-lg">
+    <div className="grid grid-cols-3 gap-4">
+    <div className="text-center p-3 bg-rose-50/40 rounded-lg">
       <div className="text-2xl font-bold text-rose-700">{statistics.total}</div>
       <div className="text-sm text-rose-600">Total de correos</div>
     </div>
@@ -49,10 +49,11 @@ const ExportButtons: React.FC<{
   onDownloadText: () => void;
   onDownloadCSV: () => void;
 }> = memo(({ onCopyAll, onDownloadText, onDownloadCSV }) => (
-  <div className="flex gap-2">
+    <div className="flex gap-2">
     <button
       onClick={onCopyAll}
-      className="px-3 py-2 text-sm bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-md flex items-center gap-2 transition-colors"
+      /* Botón Copiar todo con fondo más pálido */
+      className="px-3 py-2 text-sm bg-rose-50/40 hover:bg-rose-50 text-rose-700 rounded-md flex items-center gap-2 transition-colors"
     >
       <Copy className="h-4 w-4 text-rose-500" />
       Copiar Todo
@@ -99,12 +100,12 @@ const PaginationControls: React.FC<{
   onPrevious, 
   onCopyCurrentEmail 
 }) => (
-  <div className="p-4 border-b border-rose-100 bg-rose-50">
+  <div className="p-4 border-b border-rose-50 bg-rose-50/40">
     <div className="flex items-center justify-between">
       <button
         onClick={onPrevious}
         disabled={!hasPrevious}
-        className="flex items-center gap-2 px-4 py-2 text-sm bg-white hover:bg-rose-50 disabled:opacity-50 disabled:cursor-not-allowed border border-rose-100 rounded-md transition-colors"
+        className="flex items-center gap-2 px-4 py-2 text-sm bg-white hover:bg-rose-50 disabled:opacity-50 disabled:cursor-not-allowed border border-rose-50 rounded-md transition-colors"
       >
         <ChevronLeft className="h-4 w-4" />
         Anterior
@@ -115,16 +116,16 @@ const PaginationControls: React.FC<{
           Correo {currentIndex + 1} de {totalEmails}
         </span>
         
-        <div className="w-32 bg-rose-100 rounded-full h-2">
+        <div className="w-32 bg-rose-50 rounded-full h-2">
           <div 
-            className="bg-rose-400 h-2 rounded-full transition-all duration-300" 
+            className="bg-rose-200 h-2 rounded-full transition-all duration-300" 
             style={{ width: `${progress}%` }}
           />
         </div>
         
         <button
           onClick={onCopyCurrentEmail}
-          className="flex items-center gap-2 px-3 py-2 text-sm bg-rose-100 hover:bg-rose-200 text-rose-700 rounded-md transition-colors"
+          className="flex items-center gap-2 px-3 py-2 text-sm bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-md transition-colors"
           title="Copiar este correo"
         >
           <Copy className="h-4 w-4 text-rose-500" />
@@ -135,7 +136,7 @@ const PaginationControls: React.FC<{
       <button
         onClick={onNext}
         disabled={!hasNext}
-        className="flex items-center gap-2 px-4 py-2 text-sm bg-white hover:bg-rose-50 disabled:opacity-50 disabled:cursor-not-allowed border border-rose-100 rounded-md transition-colors"
+        className="flex items-center gap-2 px-4 py-2 text-sm bg-white hover:bg-rose-50 disabled:opacity-50 disabled:cursor-not-allowed border border-rose-50 rounded-md transition-colors"
       >
         Siguiente
         <ChevronRight className="h-4 w-4" />
@@ -153,7 +154,7 @@ PaginationControls.displayName = 'PaginationControls';
 const EmailContent: React.FC<{ email: GeneratedEmail }> = memo(({ email }) => (
   <div className="p-6">
     <div className="space-y-6">
-      <div className="flex items-start gap-3 p-4 bg-rose-50 rounded-lg">
+      <div className="flex items-start gap-3 p-4 bg-rose-50/40 rounded-lg">
         <User className="h-5 w-5 text-rose-400 mt-1" />
         <div className="flex-1">
           <div className="text-sm font-medium text-rose-700 mb-1">Para:</div>
@@ -182,7 +183,7 @@ const EmailContent: React.FC<{ email: GeneratedEmail }> = memo(({ email }) => (
           <Mail className="h-4 w-4" />
           Mensaje:
         </label>
-        <div className="p-6 bg-white border-2 border-rose-100 rounded-lg min-h-[300px]">
+        <div className="p-6 bg-white border-2 border-rose-50 rounded-lg min-h-[300px]">
           <pre className="whitespace-pre-wrap text-gray-900 text-sm leading-relaxed font-sans">
             {email.body}
           </pre>
@@ -199,7 +200,7 @@ EmailContent.displayName = 'EmailContent';
  * Implementa el principio de Single Responsibility - solo renderiza estado vacío
  */
 const EmptyState: React.FC = memo(() => (
-  <div className="bg-rose-50 border border-rose-100 rounded-lg p-8 text-center">
+  <div className="bg-rose-50/40 border border-rose-50 rounded-lg p-8 text-center">
     <Mail className="h-12 w-12 text-rose-300 mx-auto mb-4" />
     <h3 className="text-lg font-medium text-rose-700 mb-2">
       No hay correos generados
@@ -307,13 +308,13 @@ const EmailPreview: React.FC<EmailPreviewProps> = memo(({
               <ChevronLeft className="h-5 w-5" />
             </button>
             
-            <span className="px-4 py-2 text-sm bg-rose-50 rounded-md font-medium text-gray-900">
+            <span className="px-4 py-2 text-sm bg-rose-50/40 rounded-md font-medium text-gray-900">
               {pagination.currentIndex + 1} / {emails.length}
             </span>
             
             <button
               onClick={handleCopyCurrentEmail}
-              className="flex items-center gap-2 px-3 py-2 text-sm bg-rose-100 hover:bg-rose-200 text-rose-700 rounded-md transition-colors"
+              className="flex items-center gap-2 px-3 py-2 text-sm bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-md transition-colors"
               title="Copiar este correo"
             >
               <Copy className="h-4 w-4 text-rose-500" />

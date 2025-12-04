@@ -72,7 +72,8 @@ const FieldMappingComponent: React.FC<FieldMappingProps> = memo(({
 
   if (detectedFields.length === 0) {
     return (
-      <div className="bg-rose-50 border border-rose-100 rounded-lg p-6">
+      /* Estado sin campos detectados: fondo y borde más pálidos */
+      <div className="bg-rose-50/40 border border-rose-50 rounded-lg p-6">
         <div className="flex items-center gap-2 mb-2">
           <AlertCircle className="h-5 w-5 text-rose-500" />
           <h3 className="font-medium text-rose-700">No se detectaron campos</h3>
@@ -86,7 +87,7 @@ const FieldMappingComponent: React.FC<FieldMappingProps> = memo(({
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 border border-rose-100">
+    <div className="bg-white rounded-lg shadow-md p-6 border border-rose-50">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-lg font-semibold text-gray-900">Mapeo de Campos</h2>
         <button
@@ -103,11 +104,12 @@ const FieldMappingComponent: React.FC<FieldMappingProps> = memo(({
           const previewData = selectedColumn ? getPreviewData(selectedColumn) : null;
           
           return (
-            <div key={field} className="border border-rose-100 rounded-lg p-4">
+            /* Cada campo mapeable con borde suavizado */
+            <div key={field} className="border border-rose-50 rounded-lg p-4">
               <div className="flex items-center gap-4 mb-3">
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="px-2 py-1 bg-rose-100 text-rose-700 text-sm font-mono rounded">
+                    <span className="px-2 py-1 bg-rose-50 text-rose-700 text-sm font-mono rounded">
                       {field}
                     </span>
                     {selectedColumn && (
@@ -119,10 +121,10 @@ const FieldMappingComponent: React.FC<FieldMappingProps> = memo(({
                 <ArrowRight className="h-4 w-4 text-rose-300" />
                 
                 <div className="flex-1">
-                  <select
+                    <select
                     value={selectedColumn || ''}
                     onChange={(e) => handleFieldMapping(field, e.target.value)}
-                    className="w-full px-3 py-2 border border-rose-100 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500"
+                    className="w-full px-3 py-2 border border-rose-50 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500"
                   >
                     <option value="">Seleccionar columna...</option>
                     {availableColumns.map((column) => (
@@ -135,7 +137,7 @@ const FieldMappingComponent: React.FC<FieldMappingProps> = memo(({
               </div>
               
               {previewData && previewData.length > 0 && (
-                <div className="mt-3 p-3 bg-rose-50 rounded-md">
+                <div className="mt-3 p-3 bg-rose-50/40 rounded-md">
                   <p className="text-xs font-medium text-rose-700 mb-2">Vista previa de datos:</p>
                   <div className="flex gap-2 flex-wrap">
                     {previewData.map((value, index) => (

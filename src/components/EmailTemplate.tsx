@@ -114,7 +114,8 @@ const EmailTemplate: React.FC<EmailTemplateProps> = memo(({
 
       {/* Sugerencias de Campos Comunes */}
       {suggestions.length > 0 && (
-        <div className="p-4 bg-rose-50 rounded-lg border border-rose-100">
+        /* Panel de sugerencias con fondo y borde más suaves */
+        <div className="p-4 bg-rose-50/40 rounded-lg border border-rose-50">
           <h3 className="text-sm font-medium text-rose-700 mb-3">
             Campos comunes que puedes usar
           </h3>
@@ -123,7 +124,8 @@ const EmailTemplate: React.FC<EmailTemplateProps> = memo(({
               <button
                 key={field}
                 onClick={() => insertField(field)}
-                className="px-2 py-1 bg-rose-100 hover:bg-rose-200 text-rose-700 text-xs rounded-md font-mono transition-colors flex items-center gap-1"
+                /* Botones de sugerencia con fondo menos intenso */
+                className="px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs rounded-md font-mono transition-colors flex items-center gap-1"
                 title={`Insertar {{${field}}}`}
               >
                 <Plus className="h-3 w-3" />
