@@ -42,13 +42,13 @@ function App() {
     Object.keys(appState.fieldMapping).length > 0;
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-rose-50">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
+      <header className="bg-white shadow-sm border-b border-rose-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-3">
-              <Mail className="h-8 w-8 text-blue-600" />
+              <Mail className="h-8 w-8 text-rose-500" />
               <h1 className="text-xl font-semibold text-gray-900">
                 Generador de Correos Personalizados
               </h1>
@@ -58,7 +58,7 @@ function App() {
             {shouldShowResetButton && (
               <button
                 onClick={() => resetWithConfirmation()}
-                className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors text-sm font-medium"
+                className="flex items-center gap-2 px-4 py-2 bg-rose-500 hover:bg-rose-600 text-white rounded-lg transition-colors text-sm font-medium"
                 title="Empezar desde cero"
               >
                 <RotateCcw className="h-4 w-4" />
@@ -87,12 +87,12 @@ function App() {
                     className={`
                       flex items-center gap-3 px-4 py-2 rounded-lg transition-colors
                       ${isActive 
-                        ? 'bg-blue-600 text-white' 
+                        ? 'bg-violet-600 text-white' 
                         : isCompleted 
-                          ? 'bg-green-100 text-green-700 hover:bg-green-200' 
+                          ? 'bg-violet-100 text-violet-700 hover:bg-violet-200' 
                           : canAccess
-                            ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                            : 'bg-gray-50 text-gray-400 cursor-not-allowed'
+                            ? 'bg-rose-50 text-rose-700 hover:bg-rose-100'
+                            : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                       }
                     `}
                   >
@@ -103,7 +103,7 @@ function App() {
                     </div>
                   </button>
                   {index < steps.length - 1 && (
-                    <div className="w-6 h-px bg-gray-300 mx-3" />
+                    <div className="w-6 h-px bg-rose-200 mx-3" />
                   )}
                 </li>
               );
@@ -130,7 +130,7 @@ function App() {
                 <div className="mt-6 flex justify-end">
                   <button
                     onClick={() => appState.setActiveStep(2)}
-                    className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+                    className="px-6 py-3 bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition-colors flex items-center gap-2"
                   >
                     Siguiente: Crear Plantilla
                     <FileText className="h-4 w-4" />
@@ -156,13 +156,13 @@ function App() {
                 <div className="mt-6 flex justify-between">
                   <button
                     onClick={() => appState.setActiveStep(1)}
-                    className="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                    className="px-6 py-3 bg-rose-300 text-white rounded-lg hover:bg-rose-400 transition-colors"
                   >
                     Anterior
                   </button>
                   <button
                     onClick={() => appState.setActiveStep(3)}
-                    className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+                    className="px-6 py-3 bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition-colors flex items-center gap-2"
                   >
                     Siguiente: Mapear Campos
                     <Mail className="h-4 w-4" />
@@ -187,14 +187,14 @@ function App() {
               <div className="mt-6 flex justify-between">
                 <button
                   onClick={() => appState.setActiveStep(2)}
-                  className="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                  className="px-6 py-3 bg-rose-300 text-white rounded-lg hover:bg-rose-400 transition-colors"
                 >
                   Anterior
                 </button>
                 {Object.keys(appState.fieldMapping).length > 0 && (
                   <button
                     onClick={() => appState.setActiveStep(4)}
-                    className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+                    className="px-6 py-3 bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition-colors flex items-center gap-2"
                   >
                     Generar Correos
                     <Send className="h-4 w-4" />
@@ -218,7 +218,7 @@ function App() {
               <div className="mt-6 flex justify-start">
                 <button
                   onClick={() => appState.setActiveStep(3)}
-                  className="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                  className="px-6 py-3 bg-rose-300 text-white rounded-lg hover:bg-rose-400 transition-colors"
                 >
                   Anterior
                 </button>
