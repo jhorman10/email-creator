@@ -23,17 +23,17 @@ interface EmailPreviewProps {
  */
 const EmailStatistics: React.FC<{ statistics: { total: number; withRecipient: number; withoutRecipient: number } }> = memo(({ statistics }) => (
   <div className="grid grid-cols-3 gap-4">
-    <div className="text-center p-3 bg-blue-50 rounded-lg">
-      <div className="text-2xl font-bold text-blue-600">{statistics.total}</div>
-      <div className="text-sm text-blue-700">Total de correos</div>
+    <div className="text-center p-3 bg-rose-50 rounded-lg">
+      <div className="text-2xl font-bold text-rose-700">{statistics.total}</div>
+      <div className="text-sm text-rose-600">Total de correos</div>
     </div>
-    <div className="text-center p-3 bg-green-50 rounded-lg">
-      <div className="text-2xl font-bold text-green-600">{statistics.withRecipient}</div>
-      <div className="text-sm text-green-700">Con destinatario</div>
+    <div className="text-center p-3 bg-violet-50 rounded-lg">
+      <div className="text-2xl font-bold text-violet-700">{statistics.withRecipient}</div>
+      <div className="text-sm text-violet-600">Con destinatario</div>
     </div>
-    <div className="text-center p-3 bg-orange-50 rounded-lg">
-      <div className="text-2xl font-bold text-orange-600">{statistics.withoutRecipient}</div>
-      <div className="text-sm text-orange-700">Sin destinatario</div>
+    <div className="text-center p-3 bg-amber-50 rounded-lg">
+      <div className="text-2xl font-bold text-amber-700">{statistics.withoutRecipient}</div>
+      <div className="text-sm text-amber-600">Sin destinatario</div>
     </div>
   </div>
 ));
@@ -52,21 +52,21 @@ const ExportButtons: React.FC<{
   <div className="flex gap-2">
     <button
       onClick={onCopyAll}
-      className="px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md flex items-center gap-2 transition-colors"
+      className="px-3 py-2 text-sm bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-md flex items-center gap-2 transition-colors"
     >
-      <Copy className="h-4 w-4" />
+      <Copy className="h-4 w-4 text-rose-500" />
       Copiar Todo
     </button>
     <button
       onClick={onDownloadText}
-      className="px-3 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-md flex items-center gap-2 transition-colors"
+      className="px-3 py-2 text-sm bg-violet-600 hover:bg-violet-700 text-white rounded-md flex items-center gap-2 transition-colors"
     >
       <Download className="h-4 w-4" />
       TXT
     </button>
     <button
       onClick={onDownloadCSV}
-      className="px-3 py-2 text-sm bg-green-600 hover:bg-green-700 text-white rounded-md flex items-center gap-2 transition-colors"
+      className="px-3 py-2 text-sm bg-amber-600 hover:bg-amber-700 text-white rounded-md flex items-center gap-2 transition-colors"
     >
       <Download className="h-4 w-4" />
       CSV
@@ -99,35 +99,35 @@ const PaginationControls: React.FC<{
   onPrevious, 
   onCopyCurrentEmail 
 }) => (
-  <div className="p-4 border-b border-gray-200 bg-gray-50">
+  <div className="p-4 border-b border-rose-100 bg-rose-50">
     <div className="flex items-center justify-between">
       <button
         onClick={onPrevious}
         disabled={!hasPrevious}
-        className="flex items-center gap-2 px-4 py-2 text-sm bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed border border-gray-300 rounded-md transition-colors"
+        className="flex items-center gap-2 px-4 py-2 text-sm bg-white hover:bg-rose-50 disabled:opacity-50 disabled:cursor-not-allowed border border-rose-100 rounded-md transition-colors"
       >
         <ChevronLeft className="h-4 w-4" />
         Anterior
       </button>
 
       <div className="flex items-center gap-4">
-        <span className="text-sm font-medium text-gray-700">
+        <span className="text-sm font-medium text-rose-700">
           Correo {currentIndex + 1} de {totalEmails}
         </span>
         
-        <div className="w-32 bg-gray-200 rounded-full h-2">
+        <div className="w-32 bg-rose-100 rounded-full h-2">
           <div 
-            className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
+            className="bg-rose-400 h-2 rounded-full transition-all duration-300" 
             style={{ width: `${progress}%` }}
           />
         </div>
         
         <button
           onClick={onCopyCurrentEmail}
-          className="flex items-center gap-2 px-3 py-2 text-sm bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-md transition-colors"
+          className="flex items-center gap-2 px-3 py-2 text-sm bg-rose-100 hover:bg-rose-200 text-rose-700 rounded-md transition-colors"
           title="Copiar este correo"
         >
-          <Copy className="h-4 w-4" />
+          <Copy className="h-4 w-4 text-rose-500" />
           Copiar
         </button>
       </div>
@@ -135,7 +135,7 @@ const PaginationControls: React.FC<{
       <button
         onClick={onNext}
         disabled={!hasNext}
-        className="flex items-center gap-2 px-4 py-2 text-sm bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed border border-gray-300 rounded-md transition-colors"
+        className="flex items-center gap-2 px-4 py-2 text-sm bg-white hover:bg-rose-50 disabled:opacity-50 disabled:cursor-not-allowed border border-rose-100 rounded-md transition-colors"
       >
         Siguiente
         <ChevronRight className="h-4 w-4" />
@@ -153,13 +153,13 @@ PaginationControls.displayName = 'PaginationControls';
 const EmailContent: React.FC<{ email: GeneratedEmail }> = memo(({ email }) => (
   <div className="p-6">
     <div className="space-y-6">
-      <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
-        <User className="h-5 w-5 text-gray-500 mt-1" />
+      <div className="flex items-start gap-3 p-4 bg-rose-50 rounded-lg">
+        <User className="h-5 w-5 text-rose-400 mt-1" />
         <div className="flex-1">
-          <div className="text-sm font-medium text-gray-700 mb-1">Para:</div>
+          <div className="text-sm font-medium text-rose-700 mb-1">Para:</div>
           <div className="text-gray-900 font-medium">
             {email.recipient || (
-              <span className="text-orange-600 italic">Sin destinatario definido</span>
+              <span className="text-amber-700 italic">Sin destinatario definido</span>
             )}
           </div>
         </div>
@@ -167,12 +167,12 @@ const EmailContent: React.FC<{ email: GeneratedEmail }> = memo(({ email }) => (
 
       <div className="space-y-3">
         <div className="flex items-center gap-2">
-          <MessageSquare className="h-5 w-5 text-gray-500" />
-          <label className="text-sm font-medium text-gray-700">
+          <MessageSquare className="h-5 w-5 text-rose-400" />
+          <label className="text-sm font-medium text-rose-700">
             Asunto:
           </label>
         </div>
-        <div className="p-4 bg-blue-50 rounded-lg border-l-4 border-blue-400">
+        <div className="p-4 bg-violet-50 rounded-lg border-l-4 border-violet-300">
           <div className="text-gray-900 font-medium">{email.subject}</div>
         </div>
       </div>
@@ -182,7 +182,7 @@ const EmailContent: React.FC<{ email: GeneratedEmail }> = memo(({ email }) => (
           <Mail className="h-4 w-4" />
           Mensaje:
         </label>
-        <div className="p-6 bg-white border-2 border-gray-200 rounded-lg min-h-[300px]">
+        <div className="p-6 bg-white border-2 border-rose-100 rounded-lg min-h-[300px]">
           <pre className="whitespace-pre-wrap text-gray-900 text-sm leading-relaxed font-sans">
             {email.body}
           </pre>
@@ -199,12 +199,12 @@ EmailContent.displayName = 'EmailContent';
  * Implementa el principio de Single Responsibility - solo renderiza estado vacío
  */
 const EmptyState: React.FC = memo(() => (
-  <div className="bg-gray-50 border border-gray-200 rounded-lg p-8 text-center">
-    <Mail className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-    <h3 className="text-lg font-medium text-gray-900 mb-2">
+  <div className="bg-rose-50 border border-rose-100 rounded-lg p-8 text-center">
+    <Mail className="h-12 w-12 text-rose-300 mx-auto mb-4" />
+    <h3 className="text-lg font-medium text-rose-700 mb-2">
       No hay correos generados
     </h3>
-    <p className="text-gray-600">
+    <p className="text-rose-600">
       Carga un archivo Excel, escribe una plantilla y mapea los campos para generar correos personalizados.
     </p>
   </div>
@@ -258,12 +258,12 @@ const EmailPreview: React.FC<EmailPreviewProps> = memo(({
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md border border-gray-200">
+    <div className="bg-white rounded-lg shadow-md border border-rose-100">
       {/* Header con estadísticas y botones de exportación */}
-      <div className="p-6 border-b border-gray-200">
+      <div className="p-6 border-b border-rose-100">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <Mail className="h-5 w-5 text-blue-600" />
+            <Mail className="h-5 w-5 text-rose-500" />
             <h2 className="text-lg font-semibold text-gray-900">Correos Generados</h2>
           </div>
           
@@ -296,34 +296,34 @@ const EmailPreview: React.FC<EmailPreviewProps> = memo(({
 
       {/* Navegación adicional en la parte inferior */}
       {emails.length > 1 && (
-        <div className="flex justify-center pt-4 pb-6 border-t border-gray-200">
+        <div className="flex justify-center pt-4 pb-6 border-t border-rose-100">
           <div className="flex items-center gap-4">
             <button
               onClick={pagination.goToPrevious}
               disabled={!pagination.hasPrevious}
-              className="p-2 text-gray-400 hover:text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="p-2 text-rose-500 hover:text-rose-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               title="Correo anterior"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
             
-            <span className="px-4 py-2 text-sm bg-gray-100 rounded-md font-medium">
+            <span className="px-4 py-2 text-sm bg-rose-50 rounded-md font-medium text-gray-900">
               {pagination.currentIndex + 1} / {emails.length}
             </span>
             
             <button
               onClick={handleCopyCurrentEmail}
-              className="flex items-center gap-2 px-3 py-2 text-sm bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-md transition-colors"
+              className="flex items-center gap-2 px-3 py-2 text-sm bg-rose-100 hover:bg-rose-200 text-rose-700 rounded-md transition-colors"
               title="Copiar este correo"
             >
-              <Copy className="h-4 w-4" />
+              <Copy className="h-4 w-4 text-rose-500" />
               Copiar
             </button>
             
             <button
               onClick={pagination.goToNext}
               disabled={!pagination.hasNext}
-              className="p-2 text-gray-400 hover:text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="p-2 text-rose-500 hover:text-rose-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               title="Correo siguiente"
             >
               <ChevronRight className="h-5 w-5" />
