@@ -36,7 +36,8 @@ const FileUpload: React.FC<FileUploadProps> = memo(({
 
   if (excelData) {
     return (
-      <div className="bg-white rounded-lg shadow-md p-6 border border-rose-50">
+      /* Contenedor de información del archivo: borde más visible pero suave */
+      <div className="bg-white rounded-lg shadow-md p-6 border border-rose-200 ring-1 ring-rose-50/40">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <File className="h-5 w-5 text-violet-600" />
@@ -99,9 +100,10 @@ const FileUpload: React.FC<FileUploadProps> = memo(({
         {...getRootProps()}
         className={`
           border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors
+          ring-1 ring-rose-50/30
           ${isDragActive 
-            ? 'border-violet-400 bg-violet-50' 
-            : 'border-rose-50 hover:border-rose-100 bg-rose-50/40 hover:bg-rose-50'
+            ? 'border-violet-400 bg-violet-50 ring-2 ring-violet-50/30' 
+            : 'border-rose-200 hover:border-rose-300 bg-rose-50/40 hover:bg-rose-50'
           }
           ${loading ? 'opacity-50 cursor-not-allowed' : ''}
         `}
