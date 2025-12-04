@@ -36,7 +36,6 @@ const FileUpload: React.FC<FileUploadProps> = memo(({
 
   if (excelData) {
     return (
-      {/* Bordes suavizados: border-rose-100 -> border-rose-50 */}
       <div className="bg-white rounded-lg shadow-md p-6 border border-rose-50">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
@@ -45,7 +44,6 @@ const FileUpload: React.FC<FileUploadProps> = memo(({
           </div>
           <button
             onClick={onClearData}
-            /* Fondo de hover menos intenso: hover:bg-rose-50/40 */
             className="p-1 hover:bg-rose-50/40 rounded-full transition-colors"
             title="Eliminar archivo"
           >
@@ -53,7 +51,6 @@ const FileUpload: React.FC<FileUploadProps> = memo(({
           </button>
         </div>
         
-        {/* Fondo del panel de metadatos pálido y más suave */}
         <div className="bg-rose-50/40 rounded-md p-4">
           <p className="text-sm text-rose-700 mb-2">
             <strong>Columnas encontradas:</strong> {excelData.headers.length}
@@ -104,7 +101,6 @@ const FileUpload: React.FC<FileUploadProps> = memo(({
           border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors
           ${isDragActive 
             ? 'border-violet-400 bg-violet-50' 
-            /* Cuando no está drag: bordes y fondos más suaves */
             : 'border-rose-50 hover:border-rose-100 bg-rose-50/40 hover:bg-rose-50'
           }
           ${loading ? 'opacity-50 cursor-not-allowed' : ''}
@@ -139,7 +135,6 @@ const FileUpload: React.FC<FileUploadProps> = memo(({
                 </div>
                 <div className="w-full bg-rose-50 rounded-full h-2">
                   <div 
-                    /* Barra de progreso con tono más pálido: bg-rose-200 en lugar de 400 */
                     className="bg-rose-200 h-2 rounded-full transition-all duration-300" 
                     style={{ width: `${progress}%` }}
                   ></div>
