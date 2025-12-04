@@ -8,7 +8,8 @@ interface EmailItemProps {
 const EmailItem = memo<EmailItemProps>(({ email }) => {
   return (
     <div className="px-1 mb-4">
-      <div className="bg-white rounded-lg border border-rose-100 p-4 shadow-sm">
+      {/* Hice los bordes más pálidos: border-rose-100 -> border-rose-50 */}
+      <div className="bg-white rounded-lg border border-rose-50 p-4 shadow-sm">
         <div className="flex items-start justify-between mb-3">
           <div className="flex-1">
             <p className="text-sm font-medium text-gray-900">
@@ -21,14 +22,16 @@ const EmailItem = memo<EmailItemProps>(({ email }) => {
         <div className="space-y-3">
           <div>
             <p className="text-xs font-medium text-rose-700 mb-1">Asunto:</p>
-            <p className="text-sm text-gray-900 bg-rose-50 p-2 rounded border border-rose-100">
+            {/* Fondo más tenue y borde más pálido: bg-rose-50/40 reduce intensidad visual, border-rose-50 es menos saturado */}
+            <p className="text-sm text-gray-900 bg-rose-50/40 p-2 rounded border border-rose-50">
               {email.subject || 'Sin asunto'}
             </p>
           </div>
           
           <div>
             <p className="text-xs font-medium text-rose-700 mb-1">Mensaje:</p>
-            <div className="text-sm text-gray-900 bg-rose-50 p-3 rounded border border-rose-100 max-h-32 overflow-y-auto">
+            {/* Igual que arriba: fondo más pálido con menor opacidad y borde suavizado */}
+            <div className="text-sm text-gray-900 bg-rose-50/40 p-3 rounded border border-rose-50 max-h-32 overflow-y-auto">
               <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed">
                 {email.body}
               </pre>
