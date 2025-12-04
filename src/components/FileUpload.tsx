@@ -36,36 +36,36 @@ const FileUpload: React.FC<FileUploadProps> = memo(({
 
   if (excelData) {
     return (
-      <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
+      <div className="bg-white rounded-lg shadow-md p-6 border border-rose-100">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <File className="h-5 w-5 text-green-600" />
+            <File className="h-5 w-5 text-violet-600" />
             <span className="font-medium text-gray-900">Archivo cargado exitosamente</span>
           </div>
           <button
             onClick={onClearData}
-            className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+            className="p-1 hover:bg-rose-50 rounded-full transition-colors"
             title="Eliminar archivo"
           >
-            <X className="h-4 w-4 text-gray-500" />
+            <X className="h-4 w-4 text-rose-500" />
           </button>
         </div>
         
-        <div className="bg-gray-50 rounded-md p-4">
-          <p className="text-sm text-gray-600 mb-2">
+        <div className="bg-rose-50 rounded-md p-4">
+          <p className="text-sm text-rose-700 mb-2">
             <strong>Columnas encontradas:</strong> {excelData.headers.length}
           </p>
-          <p className="text-sm text-gray-600 mb-3">
+          <p className="text-sm text-rose-700 mb-3">
             <strong>Filas de datos:</strong> {excelData.rows.length}
           </p>
           
           <div className="mb-3">
-            <p className="text-sm font-medium text-gray-700 mb-2">Columnas:</p>
+            <p className="text-sm font-medium text-rose-700 mb-2">Columnas:</p>
             <div className="flex flex-wrap gap-2">
               {excelData.headers.map((header, index) => (
                 <span
                   key={index}
-                  className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-md font-medium"
+                  className="px-2 py-1 bg-violet-100 text-violet-800 text-xs rounded-md font-medium"
                 >
                   {header}
                 </span>
@@ -75,11 +75,11 @@ const FileUpload: React.FC<FileUploadProps> = memo(({
           
           {excelData.rows.length > 0 && (
             <div>
-              <p className="text-sm font-medium text-gray-700 mb-2">Vista previa (primera fila):</p>
+              <p className="text-sm font-medium text-rose-700 mb-2">Vista previa (primera fila):</p>
               <div className="bg-white rounded border p-3">
                 {excelData.headers.map((header, index) => (
-                  <div key={index} className="flex justify-between py-1 border-b border-gray-100 last:border-b-0">
-                    <span className="font-medium text-gray-600 text-xs">{header}:</span>
+                  <div key={index} className="flex justify-between py-1 border-b border-rose-50 last:border-b-0">
+                    <span className="font-medium text-rose-600 text-xs">{header}:</span>
                     <span className="text-gray-900 text-xs">
                       {excelData.rows[0][index] || '-'}
                     </span>
@@ -100,8 +100,8 @@ const FileUpload: React.FC<FileUploadProps> = memo(({
         className={`
           border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors
           ${isDragActive 
-            ? 'border-blue-400 bg-blue-50' 
-            : 'border-gray-300 hover:border-gray-400 bg-gray-50 hover:bg-gray-100'
+            ? 'border-violet-400 bg-violet-50' 
+            : 'border-rose-100 hover:border-rose-200 bg-rose-50 hover:bg-rose-100'
           }
           ${loading ? 'opacity-50 cursor-not-allowed' : ''}
         `}
@@ -109,7 +109,7 @@ const FileUpload: React.FC<FileUploadProps> = memo(({
         <input {...getInputProps()} disabled={loading} />
         
         <div className="flex flex-col items-center gap-4">
-          <Upload className={`h-12 w-12 ${isDragActive ? 'text-blue-500' : 'text-gray-400'}`} />
+          <Upload className={`h-12 w-12 ${isDragActive ? 'text-violet-500' : 'text-rose-300'}`} />
           
           <div>
             <p className="text-lg font-medium text-gray-900 mb-2">
@@ -133,9 +133,9 @@ const FileUpload: React.FC<FileUploadProps> = memo(({
                   <span>Progreso</span>
                   <span>{progress}%</span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
+                <div className="w-full bg-rose-100 rounded-full h-2">
                   <div 
-                    className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
+                    className="bg-rose-400 h-2 rounded-full transition-all duration-300" 
                     style={{ width: `${progress}%` }}
                   ></div>
                 </div>
@@ -143,10 +143,10 @@ const FileUpload: React.FC<FileUploadProps> = memo(({
             )}
           </div>
           
-          <div className="flex gap-2 text-xs text-gray-400">
-            <span className="px-2 py-1 bg-gray-200 rounded">XLSX</span>
-            <span className="px-2 py-1 bg-gray-200 rounded">XLS</span>
-            <span className="px-2 py-1 bg-gray-200 rounded">CSV</span>
+          <div className="flex gap-2 text-xs text-rose-600">
+            <span className="px-2 py-1 bg-rose-100 rounded">XLSX</span>
+            <span className="px-2 py-1 bg-rose-100 rounded">XLS</span>
+            <span className="px-2 py-1 bg-rose-100 rounded">CSV</span>
           </div>
         </div>
       </div>
