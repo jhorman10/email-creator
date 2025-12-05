@@ -72,13 +72,12 @@ const FieldMappingComponent: React.FC<FieldMappingProps> = memo(({
 
   if (detectedFields.length === 0) {
     return (
-      /* Estado sin campos detectados: fondo y borde más pálidos */
-      <div className="bg-rose-50/40 border border-rose-50 rounded-lg p-6">
+      <div className="bg-rose-50/40 border border-rose-50 rounded-lg p-4 sm:p-6">
         <div className="flex items-center gap-2 mb-2">
           <AlertCircle className="h-5 w-5 text-rose-500" />
-          <h3 className="font-medium text-rose-700">No se detectaron campos</h3>
+          <h3 className="font-medium text-rose-700 text-sm sm:text-base">No se detectaron campos</h3>
         </div>
-        <p className="text-rose-600 text-sm">
+        <p className="text-rose-600 text-xs sm:text-sm">
           Escribe tu plantilla de correo usando campos como &#123;&#123;NOMBRE&#125;&#125;, &#123;&#123;CEDULA&#125;&#125;, etc. 
           para poder mapearlos con las columnas del Excel.
         </p>
@@ -87,44 +86,43 @@ const FieldMappingComponent: React.FC<FieldMappingProps> = memo(({
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 border border-rose-50">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-lg font-semibold text-gray-900">Mapeo de Campos</h2>
+    <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 border border-rose-50">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
+        <h2 className="text-lg sm:text-lg font-semibold text-gray-900">Mapeo de Campos</h2>
         <button
           onClick={autoMapFields}
-          className="px-4 py-2 bg-violet-600 text-white text-sm rounded-md hover:bg-violet-700 transition-colors"
+          className="w-full sm:w-auto px-3 sm:px-4 py-2 bg-violet-600 text-white text-xs sm:text-sm rounded-md hover:bg-violet-700 transition-colors"
         >
           Mapeo Automático
         </button>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4">
         {detectedFields.map((field) => {
           const selectedColumn = mapping[field];
           const previewData = selectedColumn ? getPreviewData(selectedColumn) : null;
           
           return (
-            /* Cada campo mapeable con borde suavizado */
-            <div key={field} className="border border-rose-50 rounded-lg p-4">
-              <div className="flex items-center gap-4 mb-3">
-                <div className="flex-1">
+            <div key={field} className="border border-rose-50 rounded-lg p-3 sm:p-4">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 mb-3">
+                <div className="flex-1 w-full">
                   <div className="flex items-center gap-2">
-                    <span className="px-2 py-1 bg-rose-50 text-rose-700 text-sm font-mono rounded">
+                    <span className="px-2 py-1 bg-rose-50 text-rose-700 text-xs sm:text-sm font-mono rounded">
                       {field}
                     </span>
                     {selectedColumn && (
-                      <CheckCircle className="h-4 w-4 text-violet-600" />
+                      <CheckCircle className="h-4 w-4 text-violet-600 flex-shrink-0" />
                     )}
                   </div>
                 </div>
                 
-                <ArrowRight className="h-4 w-4 text-rose-300" />
+                <ArrowRight className="h-4 w-4 text-rose-300 hidden sm:block" />
                 
-                <div className="flex-1">
-                    <select
+                <div className="flex-1 w-full">
+                  <select
                     value={selectedColumn || ''}
                     onChange={(e) => handleFieldMapping(field, e.target.value)}
-                    className="w-full px-3 py-2 border border-rose-50 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500"
+                    className="w-full px-3 py-2 border border-rose-50 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 text-sm"
                   >
                     <option value="">Seleccionar columna...</option>
                     {availableColumns.map((column) => (
@@ -137,7 +135,7 @@ const FieldMappingComponent: React.FC<FieldMappingProps> = memo(({
               </div>
               
               {previewData && previewData.length > 0 && (
-                <div className="mt-3 p-3 bg-rose-50/40 rounded-md">
+                <div className="mt-3 p-2 sm:p-3 bg-rose-50/40 rounded-md">
                   <p className="text-xs font-medium text-rose-700 mb-2">Vista previa de datos:</p>
                   <div className="flex gap-2 flex-wrap">
                     {previewData.map((value, index) => (
@@ -157,11 +155,11 @@ const FieldMappingComponent: React.FC<FieldMappingProps> = memo(({
       </div>
 
       {/* Resumen del mapeo */}
-      <div className="mt-6 grid grid-cols-2 gap-4">
-        <div className="p-4 bg-violet-50 rounded-lg border border-violet-100">
+      <div className="mt-4 sm:mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+        <div className="p-3 sm:p-4 bg-violet-50 rounded-lg border border-violet-100">
           <div className="flex items-center gap-2 mb-2">
             <CheckCircle className="h-4 w-4 text-violet-600" />
-            <span className="text-sm font-medium text-violet-900">
+            <span className="text-xs sm:text-sm font-medium text-violet-900">
               Campos mapeados: {mappedFields.length}
             </span>
           </div>
@@ -172,10 +170,10 @@ const FieldMappingComponent: React.FC<FieldMappingProps> = memo(({
           )}
         </div>
         
-        <div className="p-4 bg-amber-50 rounded-lg border border-amber-100">
+        <div className="p-3 sm:p-4 bg-amber-50 rounded-lg border border-amber-100">
           <div className="flex items-center gap-2 mb-2">
             <AlertCircle className="h-4 w-4 text-amber-600" />
-            <span className="text-sm font-medium text-amber-900">
+            <span className="text-xs sm:text-sm font-medium text-amber-900">
               Campos sin mapear: {unmappedFields.length}
             </span>
           </div>

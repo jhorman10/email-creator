@@ -28,15 +28,15 @@ const EmailTemplate: React.FC<EmailTemplateProps> = memo(({
   }, [body, onBodyChange]);
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 border border-rose-100">
-      <div className="flex items-center gap-2 mb-6">
+    <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 border border-rose-200 ring-1 ring-rose-50/40">
+      <div className="flex items-center gap-2 mb-4 sm:mb-6">
         <Mail className="h-5 w-5 text-rose-500" />
-        <h2 className="text-lg font-semibold text-gray-900">Plantilla de Correo</h2>
+        <h2 className="text-lg sm:text-lg font-semibold text-gray-900">Plantilla de Correo</h2>
       </div>
 
       {/* Campo de Asunto */}
-      <div className="mb-6">
-        <label htmlFor="email-subject" className="block text-sm font-medium text-rose-700 mb-2">
+      <div className="mb-4 sm:mb-6">
+        <label htmlFor="email-subject" className="block text-xs sm:text-sm font-medium text-rose-700 mb-2">
           Asunto del correo
         </label>
         <input
@@ -45,13 +45,13 @@ const EmailTemplate: React.FC<EmailTemplateProps> = memo(({
           value={subject}
           onChange={(e) => onSubjectChange(e.target.value)}
           placeholder="Ej: Solicitud para realizar curso {{CURSO}}"
-          className="w-full px-3 py-2 border border-rose-100 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500"
+          className="w-full px-3 py-2 border border-rose-50 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 text-sm"
         />
       </div>
 
       {/* Campo de Cuerpo del Email */}
-      <div className="mb-6">
-        <label htmlFor="email-body" className="block text-sm font-medium text-rose-700 mb-2">
+      <div className="mb-4 sm:mb-6">
+        <label htmlFor="email-body" className="block text-xs sm:text-sm font-medium text-rose-700 mb-2">
           Cuerpo del correo
         </label>
         <textarea
@@ -59,8 +59,8 @@ const EmailTemplate: React.FC<EmailTemplateProps> = memo(({
           value={body}
           onChange={(e) => onBodyChange(e.target.value)}
           placeholder="Escriba su mensaje aquí. Use {{CAMPO}} para insertar datos del Excel..."
-          rows={12}
-          className="w-full px-3 py-2 border border-rose-100 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 font-mono text-sm"
+          rows={10}
+          className="w-full px-3 py-2 border border-rose-50 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 font-mono text-xs sm:text-sm"
         />
       </div>
 
@@ -89,8 +89,8 @@ const EmailTemplate: React.FC<EmailTemplateProps> = memo(({
 
       {/* Campos Disponibles del Excel */}
       {availableColumns.length > 0 && (
-        <div className="mb-4 p-4 bg-amber-50 rounded-lg border border-amber-100">
-          <h3 className="text-sm font-medium text-amber-900 mb-3">
+        <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-amber-50 rounded-lg border border-amber-100">
+          <h3 className="text-xs sm:text-sm font-medium text-amber-900 mb-3">
             Columnas disponibles en el Excel
           </h3>
           <div className="flex flex-wrap gap-2">
@@ -114,9 +114,8 @@ const EmailTemplate: React.FC<EmailTemplateProps> = memo(({
 
       {/* Sugerencias de Campos Comunes */}
       {suggestions.length > 0 && (
-        /* Panel de sugerencias con fondo y borde más suaves */
-        <div className="p-4 bg-rose-50/40 rounded-lg border border-rose-50">
-          <h3 className="text-sm font-medium text-rose-700 mb-3">
+        <div className="p-3 sm:p-4 bg-rose-50/40 rounded-lg border border-rose-50">
+          <h3 className="text-xs sm:text-sm font-medium text-rose-700 mb-3">
             Campos comunes que puedes usar
           </h3>
           <div className="flex flex-wrap gap-2">
@@ -124,8 +123,7 @@ const EmailTemplate: React.FC<EmailTemplateProps> = memo(({
               <button
                 key={field}
                 onClick={() => insertField(field)}
-                /* Botones de sugerencia con fondo menos intenso */
-                className="px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs rounded-md font-mono transition-colors flex items-center gap-1"
+                className="px-2 sm:px-3 py-1 sm:py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs sm:text-sm rounded-md font-mono transition-colors flex items-center gap-1"
                 title={`Insertar {{${field}}}`}
               >
                 <Plus className="h-3 w-3" />
